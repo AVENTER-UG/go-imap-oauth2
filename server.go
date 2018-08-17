@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -26,7 +27,14 @@ var (
 	ClientDomain   string
 	ClientID       string
 	ClientSecret   string
+	User           UserInfo
 )
+
+type UserInfo struct {
+	UserID      string `json:"user_id"`
+	UserName    string `json:"user_name"`
+	ConnectorID string `json:"connector_id"`
+}
 
 func ImapLogin(username, userPassword string) bool {
 	log.Println("authenticate against imap", username)
@@ -52,6 +60,9 @@ func ImapLogin(username, userPassword string) bool {
 		return false
 	}
 	log.Println("imap login success")
+
+	User.UserName = username
+
 	return true
 }
 
@@ -104,6 +115,7 @@ func main() {
 
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/auth", authHandler)
+	http.HandleFunc("/userinfo", userInfoHandler)
 
 	http.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
 		err := srv.HandleAuthorizeRequest(w, r)
@@ -183,9 +195,32 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusFound)
 		us.Delete("Form")
 		us.Set("UserID", us.Get("LoggedInUserID"))
+
+		uid := us.Get("UserID")
+		User.UserID = uid.(string)
 		return
 	}
 	outputHTML(w, r, "static/auth.html")
+}
+
+func userInfoHandler(w http.ResponseWriter, r *http.Request) {
+	//us, err := globalSessions.SessionStart(w, r)
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	log.Println("userInfoHandler: HTTP Error")
+	//	return
+	//}
+
+	//var info []byte
+	info, err := json.Marshal(User)
+
+	if err != nil {
+		log.Println("userInfoHandler: Error Create JSON")
+		return
+	}
+	log.Println(User)
+
+	sendJSON(info, w)
 }
 
 func outputHTML(w http.ResponseWriter, req *http.Request, filename string) {
@@ -197,4 +232,9 @@ func outputHTML(w http.ResponseWriter, req *http.Request, filename string) {
 	defer file.Close()
 	fi, _ := file.Stat()
 	http.ServeContent(w, req, file.Name(), fi.ModTime(), file)
+}
+
+func sendJSON(js []byte, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Write(js)
 }
