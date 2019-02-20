@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -68,14 +67,12 @@ func ImapLogin(username, userPassword string) bool {
 
 func init() {
 
-	flag.StringVar(&IMAPServer, "imapserver", "mail.gmail.com", "imap server")
-	flag.StringVar(&IMAPPort, "imapport", "143", "imap port")
-	flag.StringVar(&IMAPDomain, "imapdomain", "gmail.com", "imab domain")
-	flag.StringVar(&ClientDomain, "clientdomain", "http://localhost", "client domain")
-	flag.StringVar(&ClientID, "clientid", "222222", "client id")
-	flag.StringVar(&ClientSecret, "clientsecret", "22222222", "client secret")
-
-	flag.Parse()
+	IMAPServer = os.Getenv("IMAPSERVER")
+	IMAPPort = os.Getenv("IMAPPORT")
+	IMAPDomain = os.Getenv("IMAPDOMAIN")
+	ClientDomain = os.Getenv("CLIENTDOMAIN")
+	ClientID = os.Getenv("CLIENTID")
+	ClientSecret = os.Getenv("clientsecret")
 
 	fmt.Println("IMAPServer=", IMAPServer)
 	fmt.Println("IMAPPort=", IMAPPort)

@@ -1,4 +1,17 @@
-FROM golang:1.9.7-alpine
+FROM golang:alpine as builder
+
+WORKDIR /build
+
+ADD server.go /build/server.go
+
+RUN apk add git && \
+    go get -d
+
+
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main server.go
+
+FROM alpine
 MAINTAINER Andreas Peters <support@aventer.biz>
 
 ENV IMAPSERVER "imag.gmail.com"
@@ -8,18 +21,16 @@ ENV CLIENTID "1"
 ENV CLIENTSECRET "2"
 ENV DOMAIN "gmail.com"
 
+RUN adduser -S -D -H -h /app appuser
 
-RUN apk update; apk add git && \
-    go get github.com/wxdao/go-imap/imap && \
-    go get gopkg.in/oauth2.v3/... && \
-    mkdir /app 
+USER appuser
+
+COPY --from=builder /build/main /app/
 
 COPY static /app/static
-ADD server.go /app/server.go
-ADD start.sh /app/start.sh
 
 EXPOSE 9094
 
 WORKDIR "/app"
 
-ENTRYPOINT ["/app/start.sh"]
+CMD ["./main"]
