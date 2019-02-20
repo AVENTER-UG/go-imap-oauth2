@@ -72,7 +72,7 @@ func init() {
 	IMAPDomain = os.Getenv("IMAPDOMAIN")
 	ClientDomain = os.Getenv("CLIENTDOMAIN")
 	ClientID = os.Getenv("CLIENTID")
-	ClientSecret = os.Getenv("clientsecret")
+	ClientSecret = os.Getenv("CLIENTSECRET")
 
 	fmt.Println("IMAPServer=", IMAPServer)
 	fmt.Println("IMAPPort=", IMAPPort)
