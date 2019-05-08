@@ -194,19 +194,26 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 		us.Set("UserID", us.Get("LoggedInUserID"))
 
 		uid := us.Get("UserID")
-		User.UserID = uid.(string)
+
 		return
 	}
 	outputHTML(w, r, "static/auth.html")
 }
 
 func userInfoHandler(w http.ResponseWriter, r *http.Request) {
-	//us, err := globalSessions.SessionStart(w, r)
-	//if err != nil {
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//	log.Println("userInfoHandler: HTTP Error")
-	//	return
-	//}
+	us, err := globalSessions.SessionStart(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println("userInfoHandler: HTTP Error")
+		return
+	}
+
+	var sesUser UserInfo
+
+	sesUser.UserID = us.Get("UserID").(string)
+	sesUser.EMail = us.Get("EMail").(string)
+	sesUser.Name = us.Get("UserName").(string)
+	sesUser.Sub = us.Get("UserID").(string)
 
 	//var info []byte
 	info, err := json.Marshal(User)
