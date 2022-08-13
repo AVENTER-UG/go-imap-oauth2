@@ -33,6 +33,9 @@ type UserInfo struct {
 	UserID      string `json:"user_id"`
 	UserName    string `json:"user_name"`
 	ConnectorID string `json:"connector_id"`
+	EMail       string `json:"email"`
+	Name        string `json:"name"`
+	Sub         string `json:"sub"`
 }
 
 func ImapLogin(username, userPassword string) bool {
@@ -192,8 +195,6 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusFound)
 		us.Delete("Form")
 		us.Set("UserID", us.Get("LoggedInUserID"))
-
-		uid := us.Get("UserID")
 
 		return
 	}

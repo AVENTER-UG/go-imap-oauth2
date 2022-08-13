@@ -2,14 +2,14 @@ FROM golang:alpine as builder
 
 WORKDIR /build
 
-ADD server.go /build/server.go
+COPY . /build/
 
 RUN apk add git && \
     go get -d
 
 
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main server.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main .
 
 FROM alpine
 MAINTAINER Andreas Peters <support@aventer.biz>
