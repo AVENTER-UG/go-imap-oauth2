@@ -1,0 +1,13 @@
+NAME                          VERSION                             TYPE        
+github.com/dgrijalva/jwt-go   v3.2.0+incompatible                 go-module    
+github.com/tidwall/btree      v1.8.1                              go-module    
+github.com/tidwall/buntdb     v1.3.2                              go-module    
+github.com/tidwall/gjson      v1.18.0                             go-module    
+github.com/tidwall/grect      v0.1.4                              go-module    
+github.com/tidwall/match      v1.2.0                              go-module    
+github.com/tidwall/pretty     v1.2.1                              go-module    
+github.com/tidwall/rtred      v0.1.2                              go-module    
+github.com/tidwall/tinyqueue  v0.1.1                              go-module    
+github.com/wxdao/go-imap      v0.0.0-20171102101307-a24865f13935  go-module    
+gopkg.in/oauth2.v3            v3.12.0                             go-module    
+gopkg.in/session.v1           v1.0.1                              go-module
