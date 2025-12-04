@@ -2,7 +2,7 @@
 #vars
 IMAGENAME=go-imap-oauth2
 REPO=avhost
-TAG=v0.1.0
+TAG=v0.1.1
 BRANCH=${TAG}
 BRANCHSHORT=$(shell echo ${BRANCH} | awk -F. '{ print $$1"."$$2 }')
 BUILDDATE=$(shell date -u +%Y%m%d)
@@ -28,7 +28,6 @@ push:
 	@docker buildx build --sbom=true --provenance=true --platform linux/amd64 --push --build-arg TAG=${BRANCH} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
 	@docker buildx build --sbom=true --provenance=true --platform linux/amd64 --push --build-arg TAG=${BRANCH} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCHSHORT} .
 	@docker buildx build --sbom=true --provenance=true --platform linux/amd64 --push --build-arg TAG=${BRANCH} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
-
 
 update-gomod:
 	go get -u
